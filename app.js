@@ -4,10 +4,18 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var sassMiddleware = require('node-sass-middleware');
+var mongoose = require('mongoose');
+var bodyParser = require('body-parser');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var seedDB = require('./seeddb');
 
+
+//route requirements
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+mongoose.connect("mongodb://localhost/note_app");
 var app = express();
 
 // view engine setup
@@ -26,6 +34,23 @@ app.use(sassMiddleware({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Passport Configuration
+// app.use(require('express-session')({
+//   secret: 'Secret for the session!',
+//   resave: false,
+//   saveUninitialized: false
+// }))
+
+// app.use(passport.initialize());
+// app.use(passport.session());
+// passport.use(new LocalStrategy(User.authenticate()));
+// passport.serializeUser(User.serializeUser());
+// passport.deserializeUser(User.deserializeUser());
+
+//Seed Database
+//seedDB();
+
+//Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
