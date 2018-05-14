@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var User = require('./models/user-model');
 var seedDB = require('./seeddb');
 
 
@@ -24,7 +25,7 @@ app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended:true}));
 app.use(cookieParser());
 app.use(sassMiddleware({
   src: path.join(__dirname, 'public'),
@@ -34,18 +35,24 @@ app.use(sassMiddleware({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-//Passport Configuration
-// app.use(require('express-session')({
-//   secret: 'Secret for the session!',
-//   resave: false,
-//   saveUninitialized: false
-// }))
+// Passport Configuration
+app.use(require('express-session')({
+  secret: 'Secret for the session!',
+  resave: false,
+  saveUninitialized: false
+}))
 
-// app.use(passport.initialize());
-// app.use(passport.session());
-// passport.use(new LocalStrategy(User.authenticate()));
-// passport.serializeUser(User.serializeUser());
-// passport.deserializeUser(User.deserializeUser());
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+//Check for the user
+app.use((req,res,next)=>{
+  res.locals.currentUser = req.user;
+  next();
+})
 
 //Seed Database
 //seedDB();

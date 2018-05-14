@@ -1,13 +1,13 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Notes</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
+<% include ./partials/header %>
+
+  <div class="container">
     <h1>Note Taking App</h1>
     <p>Select your note below</p>
-    <a href="#">Create</a>
-    <p><%= users %></p>
-  </body>
-</html>
+    <a href="/new">Create</a>
+    <ul>
+    <% user.notes.forEach((note)=>{ %>
+      <li><a href="/<%= note._id %>"><%=note.title%></a></li>
+    <%})%>
+    </ul>
+  </div>
+<% include ./partials/footer %>
