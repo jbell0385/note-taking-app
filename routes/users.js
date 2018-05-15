@@ -28,6 +28,7 @@ router.post('/register', function(req, res, next) {
 
 //login route
 router.get('/login',(req,res)=>{
+  console.log("inside login route");
   res.render('login');
 })
 

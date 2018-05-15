@@ -5,9 +5,14 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var sassMiddleware = require('node-sass-middleware');
 var mongoose = require('mongoose');
+
+var methodOverride = require("method-override");
 var bodyParser = require('body-parser');
+var expressSanitizer = require('express-sanitizer');
+
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+
 var User = require('./models/user-model');
 var seedDB = require('./seeddb');
 
@@ -15,6 +20,7 @@ var seedDB = require('./seeddb');
 //route requirements
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var notesRouter = require('./routes/notes');
 
 mongoose.connect("mongodb://localhost/note_app");
 var app = express();
@@ -26,6 +32,7 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(methodOverride("_method"));
 app.use(cookieParser());
 app.use(sassMiddleware({
   src: path.join(__dirname, 'public'),
@@ -33,6 +40,7 @@ app.use(sassMiddleware({
   indentedSyntax: true, // true = .sass and false = .scss
   sourceMap: true
 }));
+app.use(expressSanitizer());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Passport Configuration
@@ -55,11 +63,12 @@ app.use((req,res,next)=>{
 })
 
 //Seed Database
-//seedDB();
+// seedDB();
 
 //Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/notes', notesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

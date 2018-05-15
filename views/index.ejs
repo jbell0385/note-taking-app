@@ -3,11 +3,17 @@
   <div class="container">
     <h1>Note Taking App</h1>
     <p>Select your note below</p>
-    <a href="/new">Create</a>
+    <a href="/notes/new">Create</a>
     <ul>
-    <% user.notes.forEach((note)=>{ %>
-      <li><a href="/<%= note._id %>"><%=note.title%></a></li>
-    <%})%>
+    <%if(user.notes.length > 0) {%>
+      <% user.notes.forEach((note)=>{ %>
+        <li>
+          <a href="/notes/<%= note._id %>"><%=note.title%></a>
+          <i class="fa fa-trash ml-2" aria-hidden="true"></i>
+          <a href="/notes/<%= note._id %>/edit"><i class="fa fa-pencil ml-2" aria-hidden="true"></i></a>
+        </li>
+      <%})%>
+    <% } %>
     </ul>
   </div>
 <% include ./partials/footer %>
