@@ -5,6 +5,20 @@ var User = require('../models/user-model');
 var Note = require('../models/note-model');
 
 
+router.use( function( req, res, next ) {
+    // this middleware will call for each requested
+    // and we checked for the requested query properties
+    // if _method was existed
+    // then we know, clients need to call DELETE request instead
+    if ( req.query._method == 'DELETE' ) {
+        // change the original METHOD
+        // into DELETE method
+        req.method = 'DELETE';
+        // and set requested url to /user/12
+        req.url = req.path;
+    }       
+    next(); 
+});
 
 router.get('/new',isLoggedIn, (req,res,next)=>{
     res.render('./notes/new');
@@ -48,6 +62,7 @@ router.get('/:id', (req,res,next)=>{
     })
 })
 
+//show editing form
 router.get('/:id/edit', (req,res,next)=>{
     Note.findById(req.params.id, (err,note)=>{
         if(err){
@@ -58,6 +73,7 @@ router.get('/:id/edit', (req,res,next)=>{
     })
 })
 
+//Process editing the note
 router.put('/:id', (req,res,next)=>{
     req.body.title = req.sanitize(req.body.title);
     req.body.text = req.sanitize(req.body.text);
@@ -71,7 +87,18 @@ router.put('/:id', (req,res,next)=>{
     })
 })
 
-  //middleware
+router.delete('/:id', (req,res,next)=>{
+    Note.findByIdAndRemove(req.params.id, (err,note)=>{
+        if(err){
+            console.log(err);
+            res.redirect('/');
+        }else{
+            res.redirect('/');
+        }
+    })
+})
+
+//middleware
 
 function isLoggedIn(req,res,next){
     if(req.isAuthenticated()){

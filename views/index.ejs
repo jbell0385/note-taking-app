@@ -9,11 +9,14 @@
       <% user.notes.forEach((note)=>{ %>
         <li>
           <a href="/notes/<%= note._id %>"><%=note.title%></a>
-          <i class="fa fa-trash ml-2" aria-hidden="true"></i>
+          <a href="/notes/<%= note._id %>?_method=DELETE"><i class="fa fa-trash ml-2" aria-hidden="true"></i></a>
           <a href="/notes/<%= note._id %>/edit"><i class="fa fa-pencil ml-2" aria-hidden="true"></i></a>
         </li>
       <%})%>
     <% } %>
     </ul>
   </div>
+
+
+
 <% include ./partials/footer %>
